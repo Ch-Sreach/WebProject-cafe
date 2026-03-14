@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>☕ Cook-Code Cafe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <!-- ══ TOP NAV ══════════════════════════════════════════ -->
+    <nav class="topbar">
+      <div class="brand">☕ Cook-Code <span>&</span> Cafe</div>
+      <div class="topbar-subtitle">ᴄʜᴇᴄᴋᴏᴜᴛ ꜱʏꜱᴛᴇᴍ</div>
+      <div class="cart-badge-wrap" onclick="openDrawer()">
+        <i class="fas fa-shopping-basket cart-icon"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+    </nav>
+
+    <!-- ══ CATEGORY NAV ══════════════════════════════════════ -->
+    <div class="category-nav">
+      <button class="cat-btn active" onclick="filterCat('all', this)">All Items</button>
+      <button class="cat-btn" onclick="filterCat('coffee', this)">☕ Coffee</button>
+      <button class="cat-btn" onclick="filterCat('tea', this)">🍵 Tea</button>
+      <button class="cat-btn" onclick="filterCat('frappe', this)">🧋 Frappé</button>
+      <button class="cat-btn" onclick="filterCat('juice', this)">🍹 Juice</button>
+      <button class="cat-btn" onclick="filterCat('pastry', this)">🥐 Pastry</button>
+      <button class="cat-btn" onclick="filterCat('cake', this)">🎂 Cake</button>
+      <button class="cat-btn" onclick="filterCat('breakfast', this)">🍳 Breakfast</button>
+      <button class="cat-btn" onclick="filterCat('sandwich', this)">🥪 Sandwich</button>
+    </div>
+
+    <!-- ══ MAIN LAYOUT ═══════════════════════════════════════ -->
+    <div class="main-layout">
+
+      <!-- Menu column -->
+      <div class="menu-panel">
+        <div class="section-title" id="sectionTitle">Full Menu</div>
+        <div class="menu-grid" id="menuGrid"></div>
+      </div>
+
+      <!-- ── DESKTOP SIDEBAR ──────────────────────────────── -->
+      <div class="order-panel" id="orderPanel">
+        <div class="order-header">
+          <h3><i class="fas fa-receipt me-2"></i>Current Order</h3>
+          <p id="orderCount">No items yet</p>
+        </div>
+        <div class="customer-input">
+          <input type="text" id="customerName" placeholder="👤 Customer name" />
+          <input type="text" id="tableNumber" placeholder="🪑 Table No." />
+        </div>
+        <div class="order-items" id="orderItems">
+          <div class="empty-cart">
+            <i class="fas fa-coffee"></i>
+            <p>Your order is empty.<br />Pick something delicious!</p>
+          </div>
+        </div>
+        <div class="order-totals" id="orderTotals" style="display:none">
+          <div class="total-row"><span>Subtotal</span><span id="subtotalVal">$0.00</span></div>
+          <div class="total-row"><span>Tax (8%)</span><span id="taxVal">$0.00</span></div>
+          <div class="total-row"><span>Service (5%)</span><span id="serviceVal">$0.00</span></div>
+          <div class="total-row grand"><span>Total</span><span id="totalVal">$0.00</span></div>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn" disabled onclick="openInvoice()">
+          <i class="fas fa-check-circle me-2"></i>Place Order & Invoice
+        </button>
+      </div>
+
+    </div><!-- /.main-layout -->
+
+    <!-- ══ MOBILE / TABLET BOTTOM CART BAR ═══════════════════ -->
+    <div class="mobile-cart-toggle" id="mobileCartToggle">
+      <div class="mct-left">
+        <span class="mct-icon">🧺</span>
+        <div>
+          <div class="mct-label" id="mctLabel">0 items</div>
+          <div class="mct-sub" id="mctSub">$0.00 total</div>
+        </div>
+      </div>
+      <button class="mct-open-btn" onclick="openDrawer()">View Order ↑</button>
+    </div>
+
+    <!-- ══ DRAWER OVERLAY ═════════════════════════════════════ -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+
+    <!-- ══ ORDER DRAWER (mobile/tablet) ══════════════════════ -->
+    <div class="order-drawer" id="orderDrawer">
+      <div class="drawer-handle" onclick="closeDrawer()"></div>
+
+      <div class="order-header">
+        <h3><i class="fas fa-receipt me-2"></i>Current Order</h3>
+        <p id="drawerOrderCount">No items yet</p>
+      </div>
+
+      <div class="customer-input">
+        <input type="text" id="drawerCustomerName" placeholder="👤 Customer name" />
+        <input type="text" id="drawerTableNumber" placeholder="🪑 Table No." />
+      </div>
+
+      <div class="order-items" id="drawerOrderItems">
+        <div class="empty-cart">
+          <i class="fas fa-coffee"></i>
+          <p>Your order is empty.<br />Pick something delicious!</p>
+        </div>
+      </div>
+
+      <div class="order-totals" id="drawerOrderTotals" style="display:none">
+        <div class="total-row"><span>Subtotal</span><span id="drawerSubtotalVal">$0.00</span></div>
+        <div class="total-row"><span>Tax (8%)</span><span id="drawerTaxVal">$0.00</span></div>
+        <div class="total-row"><span>Service (5%)</span><span id="drawerServiceVal">$0.00</span></div>
+        <div class="total-row grand"><span>Total</span><span id="drawerTotalVal">$0.00</span></div>
+      </div>
+
+      <button class="checkout-btn" id="drawerCheckoutBtn" disabled onclick="openInvoice()">
+        <i class="fas fa-check-circle me-2"></i>Place Order & Invoice
+      </button>
+    </div>
+
+    <!-- ══ INVOICE MODAL ══════════════════════════════════════ -->
+    <div class="modal-overlay" id="invoiceModal">
+      <div class="invoice-modal">
+        <div class="invoice-head">
+          <div class="invoice-logo">☕ Cook-Code Cafe</div>
+          <div class="invoice-sub">123 Roastery Lane, Coffee District · Tel: (885) 093511261</div>
+        </div>
+        <div class="invoice-body">
+          <div class="inv-meta">
+            <div><strong id="invCustomer">Guest</strong>Customer</div>
+            <div class="inv-meta-table">
+              <div class="table-num" id="invTable">—</div>
+              <div class="table-label">Table</div>
+            </div>
+            <div style="text-align:right">
+              <strong id="invDate">—</strong>
+              Invoice No. <span id="invNo">—</span>
+            </div>
+          </div>
+          <table class="inv-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th style="text-align:center">Qty</th>
+                <th style="text-align:right">Price</th>
+                <th style="text-align:right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="invItems"></tbody>
+          </table>
+          <hr class="inv-divider" />
+          <div class="inv-totals">
+            <div class="inv-total-row"><span>Subtotal</span><span id="invSubtotal">—</span></div>
+            <div class="inv-total-row"><span>Tax (8%)</span><span id="invTax">—</span></div>
+            <div class="inv-total-row"><span>Service Charge (5%)</span><span id="invService">—</span></div>
+            <div class="inv-total-row grand"><span>GRAND TOTAL</span><span id="invTotal">—</span></div>
+          </div>
+          <div class="inv-thanks">
+            <strong>Thank you for visiting! ☕</strong>
+            We hope to see you again soon. Enjoy your order!
+          </div>
+          <div class="inv-actions">
+            <button class="btn-print" onclick="window.print()"><i class="fas fa-print me-1"></i>Print</button>
+            <button class="btn-close-inv" onclick="closeInvoice()">New Order</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
